@@ -15,14 +15,24 @@ for i in range (4):
                 ingresos = input("Ingrese sus ingresos:")
                 while True:
                     print("\n--- MENÚ DE OPCIONES ---")
-                    print("1. Mostrar saldo")
+                    print("1. Gestor de saldo")
                     print("2. Gestor de gastos")
                     print("3. Salir")
         
                     opcion = input("Seleccione una opción (1-3): ")
 
                     if opcion == "1":
-                        print("Su saldo es: " + str(ingresos))
+                        while True:
+                            print("Su saldo es: " + str(ingresos))
+                            print("desea agregar ingresos? (s/n)")
+                            respuesta = input()
+                            if respuesta == "s":
+                                nuevos_ingresos = input("Ingrese los nuevos ingresos: ")
+                                ingresos = int(ingresos) + int(nuevos_ingresos)
+                                print("Ingresos agregados. Su nuevo saldo es: " + str(ingresos))
+                            else:
+                                print("No se han agregado nuevos ingresos.") 
+                                break   
                     elif opcion == "2":
                         gastos = input("Cuantos gastos has hecho?")
 
