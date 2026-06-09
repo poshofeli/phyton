@@ -1,18 +1,21 @@
+import json
+
+with open ("data.json","r") as file:
+    config = json.load(file)
+
 print ("Menu")
 
-user1 = "Edu"
-password2 = "jesus1020"
 
-for i in range (4):
-    if(i == 3):
+for i in range (config["intentos"]):
+    if(i == config["intentos"]):
         print("Cantidad de intentos superada.")
         break
-    user = input("ingrese usuario: ")
+    user = input("ingrese usuario: ") 
     password = input("ingrese contrasena: ")
-    if(user == user1):
-        if(password == password2 ):
+    if(user == config['user']):
+        if(password == config['password']):
                 print("Bienvenido al sistema.")
-                ingresos = input("Ingrese sus ingresos:")
+                ingresos = input("Ingrese su saldo:")
                 while True:
                     print("\n--- MENÚ DE OPCIONES ---")
                     print("1. Gestor de saldo")
@@ -29,6 +32,14 @@ for i in range (4):
                             if respuesta == "s":
                                 nuevos_ingresos = input("Ingrese los nuevos ingresos: ")
                                 ingresos = int(ingresos) + int(nuevos_ingresos)
+                                gasto ={ 
+                                        'monto':input("monto"),
+                                        'descripcion':input("descripcion: "),
+                                        'operacion':input("operacion: ")
+                                        }
+                                with open ("registros.json","w") as file:
+                                    json.dump(gasto,file)
+                                   
                                 print("Ingresos agregados. Su nuevo saldo es: " + str(ingresos))
                             else:
                                 print("No se han agregado nuevos ingresos.") 
