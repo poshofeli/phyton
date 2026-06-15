@@ -1,5 +1,5 @@
 import json
-#import requests,json
+import requests,json
 
 with open ("data.json","r") as file:
     config = json.load(file)
@@ -33,7 +33,7 @@ for i in range (config["intentos"]):
 
                     if opcion == "1":
                         while True:
-                            print("Su saldo es: "+ str(config["saldo"]))
+                            print("Su saldo es: "+ str(config["saldo"]),"Bs")
                             print("desea agregar ingresos? (s/n)")
                             respuesta = input()
                             if respuesta == "s":
@@ -53,8 +53,8 @@ for i in range (config["intentos"]):
                                 lista.append(movimiento)
                                 with open ("registros.json","w") as file:
                                     json.dump(lista,file)
-                                    print("Ingreso añadido.") 
-                                print("Ingresos agregados, Su nuevo saldo es: "+ str(config["saldo"]))
+                                    print("Ingreso añadido.")
+                                print("Ingresos agregados, Su nuevo saldo es: "+ str(config["saldo"]),"Bs")
                             else:
                                 print("No se han agregado nuevos ingresos.") 
                                 break
@@ -70,7 +70,8 @@ for i in range (config["intentos"]):
                                 config["saldo"] = float(config["saldo"]) - float(gasto)
                                 with open ("data.json","w") as file:
                                     json.dump(config,file)
-                                print("Su gasto es: "+str(gasto)+" y su saldo restante es: "+str(config["saldo"]))
+                                print("Su gasto es: "+str(gasto),"Bs.")
+                                print("Su saldo restante es: "+str(config["saldo"]),"Bs")
                                 movimiento = {
                                     'monto':gasto,
                                     'descripcion':input("Descripcion: "),
@@ -91,7 +92,7 @@ for i in range (config["intentos"]):
 
                     elif opcion == "3":
                         print("Historial de movientos")
-                        print(f"Saldo actual: {config['saldo']}")
+                        print(f"Saldo actual: {config['saldo']}Bs")
                         print("Cargando...")
                         print("Movimientos:")
                         with open ("registros.json","r") as file:
@@ -108,20 +109,19 @@ for i in range (config["intentos"]):
                         print("1. Dolar")
                         print("2. Euro")
 
-                        opcion_divisa = input("Seleccione una opción (1-3): ")
+                        opcion_divisa = input("Seleccione una opción (1-2): ")
                         if opcion_divisa == "1":
                             response = requests.get("https://ve.dolarapi.com/v1/dolares/oficial")
                             dolar_data = response.json()
                             dolar = float(config["saldo"]) / (dolar_data["promedio"])
-                            print(f"Su saldo en dolares es: {dolar}")
-                            break
+                            print(f"Su saldo en dolares es: {dolar}$")
+                            continue
                         elif opcion_divisa == "2":
                             response = requests.get("https://ve.dolarapi.com/v1/euros/oficial")
                             euro_data = response.json()
                             euro = float(config["saldo"]) / (euro_data["promedio"])
-                            print(f"Su saldo en euros es: {euro}")
-                            break
-
+                            print(f"Su saldo en euros es: {euro}€")
+                            continue
                         else:
                             print("Opción no válida. Intente de nuevo.")
                     
