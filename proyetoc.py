@@ -1,5 +1,5 @@
 import json
-import requests,json
+#import requests,json
 
 with open ("data.json","r") as file:
     config = json.load(file)
@@ -24,8 +24,12 @@ for i in range (config["intentos"]):
                     print("3. Historial de movientos")
                     print("4. Ventana de divisas")
                     print("5. Calculadora de divisas")
-                    print("6. Salir")
-                    opcion = input("Seleccione una opción (1-6): ")
+                    print("6. Estadisticas financieras")
+                    print("7. Analisis rapido")
+                    print("8. Análisis total")
+                    print("9. Zona de control")
+                    print("10. Salir")
+                    opcion = input("Seleccione una opción (1-10): ")
 
                     if opcion == "1":
                         while True:
@@ -56,32 +60,34 @@ for i in range (config["intentos"]):
                                 break
                                 
                     elif opcion == "2":
-                        gasto = input ("Ingrese el gasto: ")
-                        if float(gasto) > float(config["saldo"]):
-                            print("No tiene suficiente saldo para realizar este gasto.")
-                            break
+                        while True:          
+                            gasto = input ("Ingrese el gasto: ")
+                            if float(gasto) > float(config["saldo"]):
+                                print("No tiene suficiente saldo para realizar este gasto.")
+                                break
 
-                        elif float(gasto) <= float(config["saldo"]):
-                            config["saldo"] = float(config["saldo"]) - float(gasto)
-                            with open ("data.json","w") as file:
-                                json.dump(config,file)
-                            print("Su gasto es: "+str(gasto)+" y su saldo restante es: "+str(config["saldo"]))
-                            movimiento = {
-                                'monto':gasto,
-                                'descripcion':input("Descripcion: "),
-                                'operacion':("gasto: ")
-                                }
-                            with open ("registros.json","r") as file:
-                                    lista=json.load(file)
-                                    if not isinstance(lista, list):
-                                        lista = []
-                            lista.append(movimiento)
-                            with open ("registros.json","w") as file:
-                                json.dump(lista,file)
-                                print("Gasto añadido")
-                        else:
-                            print("Ocurrió un error al procesar el gasto.")
-                            break
+                            elif float(gasto) <= float(config["saldo"]):
+                                config["saldo"] = float(config["saldo"]) - float(gasto)
+                                with open ("data.json","w") as file:
+                                    json.dump(config,file)
+                                print("Su gasto es: "+str(gasto)+" y su saldo restante es: "+str(config["saldo"]))
+                                movimiento = {
+                                    'monto':gasto,
+                                    'descripcion':input("Descripcion: "),
+                                    'operacion':("gasto: ")
+                                    }
+                                with open ("registros.json","r") as file:
+                                        lista=json.load(file)
+                                        if not isinstance(lista, list):
+                                            lista = []
+                                lista.append(movimiento)
+                                with open ("registros.json","w") as file:
+                                    json.dump(lista,file)
+                                    print("Gasto añadido")
+                                    break
+                            else:
+                                print("Ocurrió un error al procesar el gasto.")
+                                break
 
                     elif opcion == "3":
                         print("Historial de movientos")
@@ -108,12 +114,13 @@ for i in range (config["intentos"]):
                             dolar_data = response.json()
                             dolar = float(config["saldo"]) / (dolar_data["promedio"])
                             print(f"Su saldo en dolares es: {dolar}")
-
+                            break
                         elif opcion_divisa == "2":
                             response = requests.get("https://ve.dolarapi.com/v1/euros/oficial")
                             euro_data = response.json()
                             euro = float(config["saldo"]) / (euro_data["promedio"])
                             print(f"Su saldo en euros es: {euro}")
+                            break
 
                         else:
                             print("Opción no válida. Intente de nuevo.")
@@ -142,8 +149,100 @@ for i in range (config["intentos"]):
                             print("Opción no válida. Intente de nuevo.")
 
                     elif opcion == "6":
+                        print("Estadisticas financieras")
+                        with open ("registros.json","r") as file:
+                            registros = json.load(file)
+
+                        if not registros:
+                            print("No hay registros disponibles.")  
+                        else:
+                            total_ingresos = 0.0 
+                            total_gastos = 0.0  
+                            cantidad_ingresos = 0
+                            cantidad_gastos = 0 
+                        for registros in registros:
+                            monto = float(registros['monto'])
+                            tipo = registros['operacion']
+                            if tipo == "ingreso.":
+                                    total_ingresos += monto
+                                    cantidad_ingresos += 1
+                            elif tipo == "gasto: ":
+                                total_gastos += monto
+                                cantidad_gastos += 1
+                                balance = total_ingresos - total_gastos
+                        print(f"Total de ingresos: {total_ingresos} bs. {cantidad_ingresos} ingresos.")
+                        print(f"Total de gastos: {total_gastos} bs. {cantidad_gastos} gastos.")
+                        print(f"Balance actual: {balance} bs.")
+
+                    elif opcion == "7":
+                        print("Analisis rapido")
+                        with open ("registros.json","r") as file:
+                            registros = json.load(file)    
+                            total_ingresos = 0.0 
+                            total_gastos = 0.0  
+                            cantidad_ingresos = 0
+                            cantidad_gastos = 0 
+                        for registros in registros:
+                            monto = float(registros['monto'])
+                            tipo = registros['operacion']
+                            if tipo == "ingreso.":
+                                    total_ingresos += monto
+                                    cantidad_ingresos += 1
+                            elif tipo == "gasto: ":
+                                    total_gastos += monto
+                                    cantidad_gastos += 1
+                                    balance = total_ingresos - total_gastos
+                        if balance < 0:
+                                        print("¡Cuidado! Estás gastando más de lo que ingresas.")
+                        elif balance == 0:
+                                        print("Estás equilibrado, pero ten cuidado con tus gastos.")
+                        else:
+                                        print("¡Buen trabajo! Estás gastando menos de lo que ingresas.")
+
+                    elif opcion == "8":
+                        print("Análisis total")
+                        with open ("registros.json","r") as file:
+                            registros = json.load(file)    
+                            total_ingresos = 0.0 
+                            total_gastos = 0.0  
+                            cantidad_ingresos = 0
+                            cantidad_gastos = 0 
+                        for registros in registros:
+                            monto = float(registros['monto'])
+                            tipo = registros['operacion']
+                            if tipo == "ingreso.":
+                                    total_ingresos += monto
+                                    cantidad_ingresos += 1
+                            elif tipo == "gasto: ":
+                                    total_gastos += monto
+                                    cantidad_gastos += 1
+                                    balance = total_ingresos - total_gastos
+                            porcentaje_gastos = (total_gastos / total_ingresos) * 100 if total_ingresos > 0 else 0
+                        print (f"has gastado el {porcentaje_gastos:.1f}% de tus ingresos totales.")
+                    
+                    elif opcion == "9":
+                        print("ZONA DE CONTROL CRITICO")
+                        confirmar = input("¿Estás seguro de que deseas acceder a esta zona? (s/n): ")
+                        if confirmar == "s":
+                            final = input("¡Alerta! Has accedido a la zona de control crítico. Seguro de eliminar todos los datos? (s/n): ")
+                            if final == "s":
+                                config["saldo"] = 0.0
+                                with open ("data.json","w") as file:
+                                    json.dump(config,file, indent=4)
+                                with open ("registros.json","w") as file:    
+                                    json.dump([],file, indent=4)
+                                print("¡Alerta! Has accedido a la zona de control crítico. Tu saldo ha sido restablecido a 0 y tus registros han sido eliminados.")
+                                break
+                            else:
+                                print("Acceso a la zona de control crítico cancelado de forma segura.")
+                        else:
+                            print("Acceso a la zona de control crítico cancelado de forma segura.")    
+                            break
+
+                    elif opcion == "10":
                         print("Saliendo del programa...")
                         break 
+
                     else:
                         print("Opción no válida. Intente de nuevo.")
             
