@@ -1,18 +1,19 @@
 import json
 import requests,json
-
 with open ("data.json","r") as file:
     config = json.load(file)
 
 print("Menu")
 print("Bienvenido")
+print("Inicie sesión")
+print("Tienes: 3 intentos para ingresar al sistema.")
 for i in range (config["intentos"]):
 
     if(i == 3):
         print("Cantidad de intentos superada.")
         break
-    user = input("ingrese usuario: ") 
-    password = input("ingrese contrasena: ")
+    user = input("Ingrese usuario: ") 
+    password = input("Ingrese contrasena: ")
     if(user == config['user']):
         if(password == config['password']):
                 print("Bienvenido al sistema.")
@@ -34,7 +35,7 @@ for i in range (config["intentos"]):
                     if opcion == "1":
                         while True:
                             print("Su saldo es: "+ str(config["saldo"]),"Bs")
-                            print("desea agregar ingresos? (s/n)")
+                            print("Desea agregar ingresos? (s/n)")
                             respuesta = input()
                             if respuesta == "s":
                                 nuevos_ingresos = input("Ingrese los nuevos ingresos: ")
@@ -54,11 +55,11 @@ for i in range (config["intentos"]):
                                 with open ("registros.json","w") as file:
                                     json.dump(lista,file)
                                     print("Ingreso añadido.")
-                                print("Ingresos agregados, Su nuevo saldo es: "+ str(config["saldo"]),"Bs")
+                                print("Ingresos agregados, su nuevo saldo es: "+ str(config["saldo"]),"Bs")
                             else:
                                 print("No se han agregado nuevos ingresos.") 
                                 break
-                                
+
                     elif opcion == "2":
                         while True:          
                             gasto = input ("Ingrese el gasto: ")
@@ -102,9 +103,8 @@ for i in range (config["intentos"]):
                                 print (f" Movimiento de: {movimiento['monto']}bs.")
                                 print (f" Descripcion: {movimiento['descripcion']}")
                                 print (f" Operacion: {movimiento['operacion']}")
-                    
-                    elif opcion == "4":
 
+                    elif opcion == "4":
                         print("Ventana de Divisas")
                         print("1. Dolar")
                         print("2. Euro")
@@ -137,14 +137,14 @@ for i in range (config["intentos"]):
                             dolar_data = response.json()
                             bolivares = cantidad_dolar * (dolar_data["promedio"])
                             print(f"{cantidad_dolar} dólares equivalen a {bolivares} bolívares.")
-
+                            print("Valor del dolar: " + str(dolar_data["promedio"]))
                         elif opcion_calculadora == "2":
                             cantidad_euro = float(input("Ingrese la cantidad en euros: "))
                             response = requests.get("https://ve.dolarapi.com/v1/euros/oficial")
                             euro_data = response.json()
                             bolivares = cantidad_euro * (euro_data["promedio"])
                             print(f"{cantidad_euro} euros equivalen a {bolivares} bolívares.")
-
+                            print("Valor del euro: " + str(euro_data["promedio"]))
                         else:
                             print("Opción no válida. Intente de nuevo.")
 
@@ -152,7 +152,6 @@ for i in range (config["intentos"]):
                         print("Estadisticas financieras")
                         with open ("registros.json","r") as file:
                             registros = json.load(file)
-
                         if not registros:
                             print("No hay registros disponibles.")  
                         else:
@@ -170,9 +169,9 @@ for i in range (config["intentos"]):
                                 total_gastos += monto
                                 cantidad_gastos += 1
                                 balance = total_ingresos - total_gastos
-                        print(f"Total de ingresos: {total_ingresos} bs. {cantidad_ingresos} ingresos.")
-                        print(f"Total de gastos: {total_gastos} bs. {cantidad_gastos} gastos.")
-                        print(f"Balance actual: {balance} bs.")
+                        print(f"Total de ingresos: {total_ingresos} Bs. {cantidad_ingresos} ingresos.")
+                        print(f"Total de gastos: {total_gastos} Bs. {cantidad_gastos} gastos.")
+                        print(f"Balance actual: {balance} Bs.")
 
                     elif opcion == "7":
                         print("Analisis rapido")
@@ -218,8 +217,8 @@ for i in range (config["intentos"]):
                                     cantidad_gastos += 1
                                     balance = total_ingresos - total_gastos
                             porcentaje_gastos = (total_gastos / total_ingresos) * 100 if total_ingresos > 0 else 0
-                        print (f"has gastado el {porcentaje_gastos:.1f}% de tus ingresos totales.")
-                    
+                        print (f"Has gastado el {porcentaje_gastos:.1f}% de tus ingresos totales.")
+
                     elif opcion == "9":
                         print("ZONA DE CONTROL CRITICO")
                         confirmar = input("¿Estás seguro de que deseas acceder a esta zona? (s/n): ")
@@ -245,9 +244,8 @@ for i in range (config["intentos"]):
 
                     else:
                         print("Opción no válida. Intente de nuevo.")
-            
-        else:
-            print ("contraseña incorrecta.")
-    else:
-        print("usuario incorrecto.")
 
+        else:
+            print ("Contraseña incorrecta.")
+    else:
+        print("Usuario incorrecto.")
