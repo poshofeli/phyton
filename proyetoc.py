@@ -6,8 +6,6 @@ def leer():
         x = json.load(file)
         return x    
 
-      
-
 with open ("data.json","r") as file:
     config = json.load(file)
 
@@ -55,10 +53,9 @@ for i in range (config["intentos"]):
                                 'descripcion':input("Descripcion: "),
                                 'operacion':("ingreso.")
                                 }
-                                with open ("registros.json","r") as file:
-                                        lista=json.load(file)
-                                        if not isinstance(lista, list):
-                                            lista = []
+                                lista = leer()
+                                if not isinstance(lista, list):
+                                    lista = []
                                 lista.append(movimiento)
                                 with open ("registros.json","w") as file:
                                     json.dump(lista,file)
