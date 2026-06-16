@@ -1,5 +1,13 @@
 import json
 import requests,json
+
+def leer():
+    with open ("registros.json","r") as file:
+        x = json.load(file)
+        return x    
+
+      
+
 with open ("data.json","r") as file:
     config = json.load(file)
 
